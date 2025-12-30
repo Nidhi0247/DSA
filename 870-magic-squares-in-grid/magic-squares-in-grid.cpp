@@ -2,7 +2,7 @@ class Solution {
 public:
     bool boolmagic(vector<vector<int>> &grid, int r, int c){
         bool seen[10]= {false};
-        if (r + 2 >= grid.size() || c + 2 >= grid[0].size()) return false;
+        //if (r + 2 >= grid.size() || c + 2 >= grid[0].size()) return false;
         for(int i=r; i<r+3;i++){
             for(int j = c; j<c+3; j++){
                 int val = grid[i][j];
@@ -26,8 +26,8 @@ public:
         int m = grid.size();
         int n= grid[0].size();
         int count =0;
-        for(int i=0 ; i<=m;i++){
-            for(int j=0; j<=n;j++){
+        for(int i=0 ; i<=m-3;i++){
+            for(int j=0; j<=n-3;j++){
                 if(boolmagic(grid,i,j)) count++;
             }
         }
