@@ -1,24 +1,17 @@
 class Solution {
 public:
     int binaryGap(int n) {
-        vector<int>ans;
-        int key;
-        for (int i =n ;i>0;i/=2){
-            key = i%2;
-            ans.push_back(key);
-        }
-        int output=0;
-
-        for(int i =0;i<ans.size();i++){
-            if(ans[i]==1){
-                for(int j=i+1;j<ans.size(); j++){
-                    if(ans[j]==1){
-                        output = max(output,j-i);
-                        break;
-                    }
+        int lastPos = -1, pos = 0, maxGap = 0;
+        while (n > 0) {
+            if (n % 2 == 1) {
+                if (lastPos != -1) {
+                    maxGap = max(maxGap, pos - lastPos);
                 }
+                lastPos = pos;
             }
+            n /= 2;
+            pos++;
         }
-        return output;
+        return maxGap;
     }
 };
