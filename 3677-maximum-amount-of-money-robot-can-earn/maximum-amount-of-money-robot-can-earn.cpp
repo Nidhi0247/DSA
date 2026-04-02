@@ -1,35 +1,30 @@
 class Solution {
 public:
     int maximumAmount(vector<vector<int>>& coins) {
-        int m = coins.size(), n = coins[0].size();
-        vector<vector<vector<int>>> dp(m, vector<vector<int>>(n, vector<int>(3, INT_MIN/2)));
-        
-        // Initialize
-        for (int k = 0; k <= 2; k++) {
-            if (coins[0][0] >= 0) dp[0][0][k] = coins[0][0];
-            else dp[0][0][k] = (k > 0 ? 0 : coins[0][0]);
-        }
-        
-        for (int r = 0; r < m; r++) {
-            for (int c = 0; c < n; c++) {
-                for (int k = 0; k <= 2; k++) {
-                    if (r == 0 && c == 0) continue;
-                    int gain = coins[r][c];
-                    
-                    // From top
-                    if (r > 0) dp[r][c][k] = max(dp[r][c][k], dp[r-1][c][k] + (gain >= 0 ? gain : gain));
-                    // From left
-                    if (c > 0) dp[r][c][k] = max(dp[r][c][k], dp[r][c-1][k] + (gain >= 0 ? gain : gain));
-                    
-                    // Neutralize robber if negative and k>0
-                    if (gain < 0 && k > 0) {
-                        if (r > 0) dp[r][c][k] = max(dp[r][c][k], dp[r-1][c][k-1]);
-                        if (c > 0) dp[r][c][k] = max(dp[r][c][k], dp[r][c-1][k-1]);
+        int n = coins.size();
+        int m = coins[0].size();
+        vector<vector<int>> dp(3, vector<int>(m, INT_MIN / 2)); // neutralize remain / col num
+        dp[2][0] = 0;
+        dp[1][0] = 0;
+        dp[0][0] = 0;
+        int temp;
+        for (int i = 0; i < n; i++){
+            for (int j = 0; j < m; j++){
+                for (int k = 2; k >= 0; k--){
+                    temp = dp[k][j] + coins[i][j];
+                    if (k > 0 && coins[i][j] < 0){
+                        temp = max(temp, dp[k - 1][j]);
                     }
+                    if (j > 0){
+                        temp = max(temp, dp[k][j - 1] + coins[i][j]);
+                        if (k > 0 && coins[i][j] < 0){
+                            temp = max(temp, dp[k - 1][j - 1]);
+                        }
+                    }
+                    dp[k][j] = temp;
                 }
             }
         }
-        
-        return max({dp[m-1][n-1][0], dp[m-1][n-1][1], dp[m-1][n-1][2]});
+        return max(max(dp[0][m - 1], dp[1][m - 1]), dp[2][m - 1]);
     }
 };
